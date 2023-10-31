@@ -144,6 +144,11 @@ def loginer(creds):
 
             # Set the window focus
             win32gui.SetForegroundWindow(hwnd)
+            cici.move_cursor_steps(960,150)
+            cici.press_left_button()
+            sleep(0.5)
+            cici.release_left_button()
+            sleep(1)
         except Exception as e:
             print(f'during login happened: {e} ')
             while True:
@@ -855,12 +860,12 @@ if __name__ == "__main__":
     print(f"wakin {wake_hrs}, sslleeeeppin: {sleep_hrs}")
     full_cycle = 0
     total_ran = 0
-    
+
     while full_cycle < 5:
 
         runs_amount = random.randint(14, 67)
         
-        current_hour = 10 #datetime.now().hour
+        current_hour = datetime.now().hour
         
         print(f"currently: {current_hour}, WILL RUN {runs_amount}")
 
