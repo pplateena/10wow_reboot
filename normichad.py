@@ -106,8 +106,6 @@ fhd_route_dict = {
 }
 
 
-ID = "Habibati_WORKER666"
-
 
 
 
@@ -136,23 +134,12 @@ def loginer(creds):
 
         start_game("game")
         sleep(20)
-        
-        try:
-            # Find the window by its title
-            window_title = "World of Warcraft"
-            hwnd = win32gui.FindWindow(None, window_title)
 
-            # Set the window focus
-            win32gui.SetForegroundWindow(hwnd)
-            cici.move_cursor_steps(960,150)
-            cici.press_left_button()
-            sleep(0.5)
-            cici.release_left_button()
-            sleep(1)
-        except Exception as e:
-            print(f'during login happened: {e} ')
-            while True:
-                sleep(600)
+        cici.move_cursor_steps(960,150)
+        cici.press_left_button()
+        sleep(0.5)
+        cici.release_left_button()
+        sleep(1)
 
 
         print('started game')
@@ -198,13 +185,6 @@ def freehold_farmer(to_run):
     model_RARROW = YOLO('instruments\\RARROW_SMALL5.pt')
     model_RARROW.to('cuda')
 
-    def write_to_csv(data, csv_name):
-        with open(csv_name, 'a', newline='') as file:
-            file.write(f'{data}\n')
-
-    def clear_file(csv_name):
-        with open(csv_name, 'w') as file:
-            pass
             
     def travel(key, cp_list,model_LOCATION, model_MARROW):
         def actions(state_input):
@@ -757,11 +737,9 @@ def freehold_farmer(to_run):
 
 
     start_time = datetime.now().strftime("%d.%m_%H:%M")
-    csv_name = f"logs\\{ID}_latest.csv"
-    clear_file(csv_name)
 
-    #write_to_csv(f"ID/{ID}/ started script at TIME/{start_time}/\n", csv_name)
-    
+
+
     runs_did = 0
     death_count = 0
     cp_failures = 0
@@ -770,8 +748,8 @@ def freehold_farmer(to_run):
         runs_did += 1
         run_start = datetime.now()
         rt_pasta = run_start.strftime("%H:%M")
-        #write_to_csv(f"RUN/{r}/ started at TIME/{rt_pasta}/", csv_name)
-        failure = "no"
+
+
         
         for key, cp_list in fhd_route_dict.items():
             if key == 'RETURN':
@@ -848,7 +826,6 @@ def freehold_farmer(to_run):
 
         time_took = '{:02}:{:02}'.format(*divmod((run_finish - run_start).seconds, 60))
         
-        #write_to_csv(f"RUN/{r}/ finished at {rf_pasta} FAIL/{failure}/, SPENT/{time_took}", csv_name)
 
 
 
