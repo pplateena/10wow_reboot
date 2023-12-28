@@ -32,26 +32,26 @@ fhd_route_dict = {
  [[662, 315], 8, None, None]
  ], 
 
-'boss1_pull': [[[658, 305], 4, None, None],#align stairs
- [[662, 325], 2, None, None],
- [[677, 340], 4, 135, None],
- [[689, 329], 8, 40, None],
- [[715, 305], 8, None, None],
- [[768, 261], 8, None, None],
- [[778, 217], 10, None, None],
- [[762, 187], 8, None, None],
- #[[743, 221], 8, None, None],
- [[718, 233], 6, None, None], #shooter
- [[721, 268], 8, None, None], #align pillar
- [[702, 278], 5, None, None], #behind
- 
- ],
+# 'boss1_pull': [[[658, 305], 4, None, None],#align stairs
+#  [[662, 325], 2, None, None],
+#  [[677, 340], 4, 135, None],
+#  [[689, 329], 8, 40, None],
+#  [[715, 305], 8, None, None],
+#  [[768, 261], 8, None, None],
+#  [[778, 217], 10, None, None],
+#  [[762, 187], 8, None, None],
+#  #[[743, 221], 8, None, None],
+#  [[718, 233], 6, None, None], #shooter
+#  [[721, 268], 8, None, None], #align pillar
+#  [[702, 278], 5, None, None], #behind
+#
+#  ],
 
 'boss1_TO_rp':[ #[[479, 301], 5, None, None], #uppper repos
  #[[714, 205], 10, None, None], #close to jump
  #[[690, 212], 10, None, None], #jumped off
- [[706, 289], 6, None, None], # up repos
- [[679, 262], 8, None, None], # jump
+ # [[706, 289], 6, None, None], # up repos
+ # [[679, 262], 8, None, None], # jump
 
  #[[670, 262], 6, None, None], # align with brdge
  [[648, 279], 2, None, None], #enter brige
@@ -110,7 +110,6 @@ fhd_route_dict = {
 
 
 def loginer(creds):
-
     def start_game(shortcut_name):
 
         script_path = os.path.abspath(__file__)
