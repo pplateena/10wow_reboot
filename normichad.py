@@ -109,7 +109,16 @@ fhd_route_dict = {
 
 
 
-def loginer(creds):
+def loginer():
+    def getcreds():
+        with open('personal_cache/credentials.txt', 'r') as file:
+            lines = file.readlines()
+
+        creds = lines[0].strip(), lines[1].strip()
+
+        print(creds)
+        return creds
+
     def start_game(shortcut_name):
 
         script_path = os.path.abspath(__file__)
@@ -168,8 +177,7 @@ def loginer(creds):
                 print('not logged in atm')
                 sleep(5)
 
-    
-
+    creds = getcreds()
     login(creds)
     checker()
 
@@ -257,7 +265,7 @@ def freehold_farmer(to_run):
         
         if dung_B == 255:
             print('we arent in dung')
-            return
+            raise KeyError()
         else:
             print("we in dung")
 
@@ -719,6 +727,9 @@ def freehold_farmer(to_run):
                             vector_north = [0, vector_player[1] - magnitude_player]
                             
                             player_angle = round(calculate_angle_north(vector_player, vector_north))
+                    else:
+                        success = False
+                        return success
                 except Exception as e:
                     print(f"failed because {e}")
                     success = False
@@ -748,8 +759,6 @@ def freehold_farmer(to_run):
         run_start = datetime.now()
         rt_pasta = run_start.strftime("%H:%M")
 
-
-        
         for key, cp_list in fhd_route_dict.items():
             if key == 'RETURN':
 
@@ -772,9 +781,17 @@ def freehold_farmer(to_run):
                     check_reset(run_start)
                     reset_dung()
                     break
+                except KeyError:
+                    print('failed to enter dungeon,saved force')
+                    failure_screenshot = capture_mode('desired', (400, 200, 1400, 800))
+                    cv2.imwrite('fails/failure_force.jpg', failure_screenshot)
+                    break
+
                 except Exception as e:
                     print(f'failed cuz {e}')
                     cici.press_key('w', 0.3)
+
+
 
                 check_reset(run_start)
                 force_move(model_LOCATION, model_MARROW, 'angle_reset')
@@ -815,6 +832,12 @@ def freehold_farmer(to_run):
                     failure = f"DEATH at {key}"
                     death_count += 1
                     break
+                except KeyError:
+                    print('failed to enter dungeon')
+                    failure_screenshot = capture_mode('desired', (400, 200, 1400, 800))
+                    cv2.imwrite('fails/failure.jpg', failure_screenshot)
+
+                    break
 
                 except Exception as e:
                     print(f'failed cuz {e}')
@@ -824,12 +847,12 @@ def freehold_farmer(to_run):
         rf_pasta = run_finish.strftime("%H:%M")
 
         time_took = '{:02}:{:02}'.format(*divmod((run_finish - run_start).seconds, 60))
-        
+
 
 
 
 if __name__ == "__main__":
-    creds = "sergeynegej5@gmail.com", "csoYWBHzI92VPY27dn"
+
     
     wake_hrs = random.randint(6, 8)
     sleep_hrs = random.randint(19, 23)
@@ -854,39 +877,28 @@ if __name__ == "__main__":
             sleep(left_sleeping*60*60)
         
         else:
-            
-            print('redy to go')
+            try:
+                print('redy to go')
 
-            loginer(creds)
-        
-            grp_creation()
+                loginer()
 
-            
+                grp_creation()
 
-            freehold_farmer(runs_amount)
+                freehold_farmer(runs_amount)
 
-            print('finished all runs')
+                print('finished all runs')
 
-            logout()
-            
+                logout()
+                afterwork_nap = 1 + uniform(0,3)
 
-            afterwork_nap = 1 + uniform(0,3)
-            
-            total_ran += runs_amount
-            
-            print(f'after work will sleep for {afterwork_nap}, already did: {total_ran} runs')
-            sleep(afterwork_nap*60*60)
+                total_ran += runs_amount
 
-            full_cycle +=1 
+                print(f'after work will sleep for {afterwork_nap}, already did: {total_ran} runs')
+                sleep(afterwork_nap*60*60)
 
-    
-
-
-
-
-        
-        
-
-
-
-
+                full_cycle +=1
+            except Exception as e:
+                print(f'whole fail, {e}')
+                print('saved whole')
+                failure_screenshot = capture_mode('desired', (400, 200, 1400, 800))
+                cv2.imwrite('fails/failure_global.jpg', failure_screenshot)
