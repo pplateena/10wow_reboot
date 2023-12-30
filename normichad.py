@@ -46,7 +46,8 @@ fhd_route_dict = {
  # [[702, 278], 5, None, None], #behind
  ],
 
-'boss1_pull2': [[[718, 217], 6, None, None],#cancer
+'boss1_pull2': [[[717, 218], 6, None, None],
+                [[718, 229], 3, None, None]#cancer
 ],
 'boss1_TO_rp':[ #[[479, 301], 5, None, None], #uppper repos
  #[[714, 205], 10, None, None], #close to jump
