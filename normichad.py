@@ -30,23 +30,24 @@ fhd_route_dict = {
  [[667, 341], 8, None, None], #behind
  [[655, 333], 8, None, 1], #behind
  [[662, 315], 8, None, None]
- ], 
+ ],
 
-# 'boss1_pull': [[[658, 305], 4, None, None],#align stairs
-#  [[662, 325], 2, None, None],
-#  [[677, 340], 4, 135, None],
-#  [[689, 329], 8, 40, None],
-#  [[715, 305], 8, None, None],
-#  [[768, 261], 8, None, None],
-#  [[778, 217], 10, None, None],
-#  [[762, 187], 8, None, None],
-#  #[[743, 221], 8, None, None],
-#  [[718, 233], 6, None, None], #shooter
-#  [[721, 268], 8, None, None], #align pillar
-#  [[702, 278], 5, None, None], #behind
-#
-#  ],
+'boss1_pull': [[[658, 305], 4, None, None],#align stairs
+ [[662, 325], 3, None, None],
+ [[677, 340], 5, 135, None],
+ [[689, 329], 10, 40, None],
+ [[731, 296], 12, None, None],
+ [[766, 262], 8, None, None], #first melee
+ [[781, 219], 10, None, None], #second
+ [[765, 187], 8, None, None], #last melee
+ [[753, 218], 8, None, None], #range
+ # [[745, 220], 6, None, None], #shooter
+ # [[721, 268], 8, None, None], #align pillar
+ # [[702, 278], 5, None, None], #behind
+ ],
 
+'boss1_pull2': [[[718, 217], 6, None, None],#cancer
+],
 'boss1_TO_rp':[ #[[479, 301], 5, None, None], #uppper repos
  #[[714, 205], 10, None, None], #close to jump
  #[[690, 212], 10, None, None], #jumped off
@@ -62,8 +63,8 @@ fhd_route_dict = {
  [[444, 412], 8, None, None], #right drunk
  #[[457, 443], 10, None, None], #left drunk1
  [[444, 460], 10, None, None], #left drunk2
- [[400, 477], 8, None, None], #left drunk3
- [[375, 439], 8, None, None], #center 
+ [[400, 477], 8, None, None], #left drunk3w
+ [[375, 439], 8, None, None], #center
  [[337, 439], 5, None, None], #lefty
  [[315, 427], 6, None, None], #pack to right
  [[302, 434], 4, None, None], #stairs ###
@@ -79,7 +80,7 @@ fhd_route_dict = {
  ],
 
 'boss2_TO_boss3':[ 
- [[251, 348], 8, None, None], #close to jump
+ [[201, 350], 8, None, None], #center
  [[177, 362], 8, None, None], #biqmmboi
  [[170, 396], 6, None, None], # right caster
  [[208, 395], 5, None, None], #left caster
@@ -271,9 +272,10 @@ def freehold_farmer(to_run):
 
         need_new_SCT = True
 
-        change_action('runner')
+
 
         while True:
+            change_action('runner')
             cici.press_key('c')
             cici.move_cursor_steps(960, 540)
 
@@ -319,6 +321,7 @@ def freehold_farmer(to_run):
                         elif (MAP_B, MAP_G, MAP_R) == (123, 22, 66):
                             print('we not in map, extra M press')
                             cici.press_key('m')
+                        print(MAP_B, MAP_G, MAP_R)
 
                     results_LOCATION = model_LOCATION.predict(MAP)
                     boxes = results_LOCATION[0].boxes
@@ -579,7 +582,7 @@ def freehold_farmer(to_run):
                     cici.press_key('n')
                     sleep(0.2)
 
-    def check_reset(start_time, run_time = 360):  
+    def check_reset(start_time, run_time = 380):
         current_time = datetime.now()
 
         delta = current_time - start_time
