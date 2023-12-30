@@ -272,7 +272,7 @@ def freehold_farmer(to_run):
             print("we in dung")
 
         need_new_SCT = True
-
+        distance_killer = 0
 
 
         while True:
@@ -355,7 +355,10 @@ def freehold_farmer(to_run):
                                 print(f"wrong pred, {distance}")
                                 cici.press_key('w', 0.2)
                                 cici.press_key('d', 0.2)
-                                
+                                distance_killer += 1
+                                if distance_killer == 2:
+                                    print('fucked up distance')
+                                    raise IndexError
                                 continue
 
                         else:
@@ -365,14 +368,13 @@ def freehold_farmer(to_run):
                             cp_angle = 20
                             player_angle = 10
                     else:
-      
                         print('ahd to use else2')
                         distance = 10
                         cp_angle = 20
                         player_angle = 10
 
                 except Exception as e:
-                    #sleep(10)
+
                     print(f'failed in pred map: {e}')
                     distance = 10
                     cp_angle = 20
@@ -398,9 +400,11 @@ def freehold_farmer(to_run):
                 need_new_SCT = False
                 debug = 0
                 player_data_old = (location, vector_player,vector_north, player_angle)
+                distance_killer = 0
 
                 if n_checkpoints == len(cp_list):
                     print('finished')
+                    distance_killer = 0
                     break
                 continue
 
@@ -421,19 +425,21 @@ def freehold_farmer(to_run):
                 print("entered n_cps")
                 match key:
                     case 'boss1_TO_rp':
-
                         n_checkpoints = 2
                         key = 'tried_force'
                         continue
-
+                    case 'boss1_pull2':
+                        print('we already down')
+                        break
                     case 'tried_force':
                         print(f'failed force key:{key}')
                         raise IndexError('checkps')
 
+
                     case _:
                         print(f'idk watudu, key: {key}')
                         raise IndexError('checkps')
-                           
+
     def damage(model_TARGET, model_RARROW):
         def do_damage(damage_color):
             damage_code = sum(damage_color)
