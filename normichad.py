@@ -854,9 +854,9 @@ def freehold_farmer(to_run):
                     cici.press_key('w', 0.3)
 
         run_finish = datetime.now()
-        rf_pasta = run_finish.strftime("%H:%M")
 
-        time_took = '{:02}:{:02}'.format(*divmod((run_finish - run_start).seconds, 60))
+
+
 
 
 
