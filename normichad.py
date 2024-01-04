@@ -15,7 +15,7 @@ import utility_modules.move_ctype as cici
 from utility_modules.resets import reset_dung, sell_loot, change_action, logout, grp_creation
 from utility_modules.calculus import calculate_vector_magnitude, calculate_angle_north
 from utility_modules.capture import capture_mode, crop
-
+## я обйобана тварь
 
 fhd_route_dict = {
 'first_pull': [[[727, 141], 8, None, None],# left
