@@ -358,7 +358,7 @@ def freehold_farmer(to_run):
                                 distance_killer += 1
                                 if distance_killer == 2:
                                     print('fucked up distance')
-                                    raise IndexError
+                                    raise IndexError()
                                 continue
 
                         else:
