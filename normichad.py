@@ -356,9 +356,9 @@ def freehold_farmer(to_run):
                                 cici.press_key('w', 0.2)
                                 cici.press_key('d', 0.2)
                                 distance_killer += 1
-                                if distance_killer == 2:
-                                    print('fucked up distance')
-                                    raise IndexError()
+                                if distance_killer > 2:
+                                    print(f'fucked up distance d_killer: {distance_killer}')
+                                    raise IndexError('wrong pred fuckup')
                                 continue
 
                         else:
@@ -404,7 +404,7 @@ def freehold_farmer(to_run):
 
                 if n_checkpoints == len(cp_list):
                     print('finished')
-                    distance_killer = 0
+
                     break
                 continue
 
@@ -434,7 +434,6 @@ def freehold_farmer(to_run):
                     case 'tried_force':
                         print(f'failed force key:{key}')
                         raise IndexError('checkps')
-
 
                     case _:
                         print(f'idk watudu, key: {key}')
@@ -756,10 +755,6 @@ def freehold_farmer(to_run):
                     print(f'angle is aight, P:{player_angle}, F:{force_angle}')
 
 
-    start_time = datetime.now().strftime("%d.%m_%H:%M")
-
-
-
     runs_did = 0
     death_count = 0
     cp_failures = 0
@@ -767,7 +762,6 @@ def freehold_farmer(to_run):
     while runs_did < to_run:
         runs_did += 1
         run_start = datetime.now()
-        rt_pasta = run_start.strftime("%H:%M")
 
         for key, cp_list in fhd_route_dict.items():
             if key == 'RETURN':
@@ -778,7 +772,7 @@ def freehold_farmer(to_run):
                 try:
                     travel(key, cp_list,model_LOCATION, model_MARROW)
                 except IndexError:
-                    print('niiigggger')
+                    print('cp failure in RETURN')
                     damage(model_TARGET, model_RARROW)
                     sleep(2)
                     cici.press_key('4')
@@ -813,7 +807,7 @@ def freehold_farmer(to_run):
                     damage(model_TARGET, model_RARROW)
                 except IndexError:
                     #cp failure
-                    print('niiigggger')
+                    print(f'CP failure in {key}')
                     damage(model_TARGET, model_RARROW)
                     sleep(1)
                     cici.press_key('4')
@@ -852,13 +846,6 @@ def freehold_farmer(to_run):
                 except Exception as e:
                     print(f'failed cuz {e}')
                     cici.press_key('w', 0.3)
-
-        run_finish = datetime.now()
-
-
-
-
-
 
 
 if __name__ == "__main__":
