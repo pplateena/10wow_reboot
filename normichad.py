@@ -356,9 +356,9 @@ def freehold_farmer(to_run):
                                 cici.press_key('w', 0.2)
                                 cici.press_key('d', 0.2)
                                 distance_killer += 1
-                                if distance_killer > 2:
+                                if distance_killer > 1:
                                     print(f'fucked up distance d_killer: {distance_killer}')
-                                    raise IndexError('wrong pred fuckup')
+                                    raise IndexError('checkps')
                                 continue
 
                         else:
@@ -372,6 +372,9 @@ def freehold_farmer(to_run):
                         distance = 10
                         cp_angle = 20
                         player_angle = 10
+                except IndexError:
+                    print('fycked up checkps')
+                    raise IndexError('indexkiller')
 
                 except Exception as e:
 
@@ -379,6 +382,7 @@ def freehold_farmer(to_run):
                     distance = 10
                     cp_angle = 20
                     player_angle = 10
+
                 
             else:
                 checkpoint_coords = checkpoint[0]
