@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import mss
 import numpy as np
 import cv2
@@ -37,6 +39,10 @@ def capture_mode(mode, region=None):
                 screenshot_np = np.array(screenshot)
                 screenshot_prepared = cv2.cvtColor(screenshot_np, cv2.COLOR_RGBA2RGB)
                 return screenshot_prepared
+
+            case 'fhd':
+                screenshot = sct.shot(output='screenshot.png')
+                return 'ua'
 
 def crop(image, mode, map_position=None):
     match mode:

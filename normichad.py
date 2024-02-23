@@ -1,4 +1,4 @@
-from ultralytics import YOLO
+# from ultralytics import YOLO
 from time import sleep
 import win32gui
 import mss
@@ -11,11 +11,14 @@ import os
 import subprocess
 from random import uniform
 
+
+
+
 import utility_modules.move_ctype as cici
 from utility_modules.resets import reset_dung, sell_loot, change_action, logout, grp_creation
 from utility_modules.calculus import calculate_vector_magnitude, calculate_angle_north
 from utility_modules.capture import capture_mode, crop
-## я обйобана тварь
+from utility_modules.reports import send_request
 
 fhd_route_dict = {
 'first_pull': [[[727, 141], 8, None, None],# left
@@ -864,9 +867,7 @@ if __name__ == "__main__":
     while full_cycle < 5:
 
         runs_amount = random.randint(14, 67)
-        
         current_hour = datetime.now().hour
-        
         print(f"currently: {current_hour}, WILL RUN {runs_amount}")
 
         if current_hour > sleep_hrs or current_hour < wake_hrs:
@@ -881,15 +882,16 @@ if __name__ == "__main__":
             try:
                 print('redy to go')
 
-                loginer()
+                # loginer()
+                image_sent = capture_mode('fhd')
+                send_request('logined','screenshot.png',f'{full_cycle}/{total_ran}')
+                # grp_creation()
 
-                grp_creation()
-
-                freehold_farmer(runs_amount)
+                # freehold_farmer(runs_amount)
 
                 print('finished all runs')
 
-                logout()
+                # logout()
                 afterwork_nap = 1 + uniform(0,3)
 
                 total_ran += runs_amount
@@ -900,6 +902,4 @@ if __name__ == "__main__":
                 full_cycle +=1
             except Exception as e:
                 print(f'whole fail, {e}')
-                print('saved whole')
-                failure_screenshot = capture_mode('desired', (400, 200, 1400, 800))
-                cv2.imwrite('fails/failure_global.jpg', failure_screenshot)
+
