@@ -555,6 +555,11 @@ def freehold_farmer(to_run):
 
                         except Exception as e:
                             cici.press_key('w', 0.5)
+                            print(f'exception in damage {e}')
+                            capture_mode('fhd')
+                            send_request(f'exception in damage:{e}', 'screenshot.png',
+                                         f'debug',
+                                         'Exception, damage')
 
                             continue
 
@@ -690,6 +695,8 @@ def freehold_farmer(to_run):
                                 distance_new = (abs(force_coords[0] - location[0]) + abs(force_coords[1] - location[1]))
                     except Exception as e:
                         print(f"failed because {e}")
+
+
                         success = False
                         return success
                     
@@ -779,8 +786,12 @@ def freehold_farmer(to_run):
                 try:
                     travel(key, cp_list,model_LOCATION, model_MARROW)
                 except IndexError:
-                    print('cp failure in RETURN')
+                    print('got lost resetting')
+                    capture_mode('fhd')
+                    send_request(f'lost in{key} f(freehold_farmer)', 'screenshot.png', f'{full_cycle}/{total_ran}',
+                                 'IndexError, freehold_farmer')
                     damage(model_TARGET, model_RARROW)
+
                     sleep(2)
                     cici.press_key('4')
                     print('pressed 4')
@@ -793,14 +804,21 @@ def freehold_farmer(to_run):
                     reset_dung()
                     break
                 except KeyError:
-                    print('failed to enter dungeon,saved force')
-                    failure_screenshot = capture_mode('desired', (400, 200, 1400, 800))
-                    cv2.imwrite('fails/failure_force.jpg', failure_screenshot)
+                    print('failed to enter dungeon')
+
+                    capture_mode('fhd')
+                    send_request(f'KeyError in{key} ', 'screenshot.png', f'{full_cycle}/{total_ran}',
+                                 'KeyError, freehold_farmer')
+
                     break
 
                 except Exception as e:
                     print(f'failed cuz {e}')
                     cici.press_key('w', 0.3)
+                    capture_mode('fhd')
+                    send_request(f'Exception in{key} error {e} ', 'screenshot.png', f'{full_cycle}/{total_ran}',
+                                 'Exception, freehold_farmer')
+
 
 
 
@@ -814,7 +832,9 @@ def freehold_farmer(to_run):
                     damage(model_TARGET, model_RARROW)
                 except IndexError:
                     #cp failure
-                    print(f'CP failure in {key}')
+                    capture_mode('fhd')
+                    send_request(f'lost in{key} f(freehold_farmer)', 'screenshot.png', f'{full_cycle}/{total_ran}',
+                                 'IndexError, freehold_farmer')
                     damage(model_TARGET, model_RARROW)
                     sleep(1)
                     cici.press_key('4')
@@ -826,13 +846,14 @@ def freehold_farmer(to_run):
                     
                     check_reset(run_start)
                     reset_dung()
-                    failure = f"CP at {key}"
-                    cp_failures += 0
                     break
 
 
                 except ValueError:
                     #death
+                    capture_mode('fhd')
+                    send_request(f'Died in{key} f(freehold_farmer)', 'screenshot.png', f'{full_cycle}/{total_ran}',
+                                 'KeyError, freehold_farmer')
                     cici.press_key('a',1)
                     cici.press_key('w',0.5)
 
@@ -840,13 +861,11 @@ def freehold_farmer(to_run):
                     force_move(model_LOCATION, model_MARROW, 'angle_reset')
                     reset_dung()
 
-                    failure = f"DEATH at {key}"
-                    death_count += 1
                     break
                 except KeyError:
                     print('failed to enter dungeon')
-                    failure_screenshot = capture_mode('desired', (400, 200, 1400, 800))
-                    cv2.imwrite('fails/failure.jpg', failure_screenshot)
+                    capture_mode('fhd')
+                    send_request(f'KeyError in{key} f(freehold_farmer)', 'screenshot.png', f'{full_cycle}/{total_ran}', 'KeyError, freehold_farmer')
 
                     break
 
@@ -890,8 +909,11 @@ if __name__ == "__main__":
                 # freehold_farmer(runs_amount)
 
                 print('finished all runs')
-
+                image_sent = capture_mode('fhd')
+                send_request('logging out','screenshot.png',f'{full_cycle}/{total_ran}')
                 # logout()
+                image_sent = capture_mode('fhd')
+                send_request('logged out','screenshot.png',f'{full_cycle}/{total_ran}')
                 afterwork_nap = 1 + uniform(0,3)
 
                 total_ran += runs_amount
