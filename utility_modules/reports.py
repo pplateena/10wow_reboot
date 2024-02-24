@@ -25,8 +25,6 @@ def send_request(message=None, image=None, status=None, additional_info=None):
     files = {}
 
     if image:
-        print('i am geree')
-        print(os.listdir())
         files["image"] = open('screenshot.png', "rb")
 
 

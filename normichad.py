@@ -129,15 +129,9 @@ def loginer():
         script_path = os.path.abspath(__file__)
         shortcut_path = os.path.join(os.path.dirname(script_path), f"{shortcut_name}.lnk")
 
-        # Get the target file path from the shortcut
-        target_file_path = subprocess.check_output(['powershell', '(New-Object -ComObject WScript.Shell).CreateShortcut("{}").TargetPath'.format(shortcut_path)]).decode().strip()
 
-        # Check if the target file exists
-        if os.path.exists(target_file_path):
-            # Execute the target file
-            subprocess.Popen([target_file_path])
-        else:
-            print("Target file does not exist.")
+        subprocess.Popen([target_file_path])
+
 
     def login(creds):
         login = creds[0]
@@ -172,15 +166,23 @@ def loginer():
         cici.press_key('enter')
 
     def checker():
-
+        counter = 0
         while True:
             infobox = capture_mode('infobox')
             if sum(infobox[195,390]) == 0:
                 print('we logged in')
+                send_request(f'logged in', 'screenshot.png',
+                             f'debug',
+                             'Working, checker')
+
                 break
             else:
                 print('not logged in atm')
-                sleep(5)
+                sleep(15)
+                counter += 1
+                if counter > 10:
+                    raise ConnectionError("ss")
+
 
     creds = getcreds()
     login(creds)
@@ -256,6 +258,9 @@ def freehold_farmer(to_run):
         timeouter = 0
         debug = 0
 
+        send_request(f'started travelling', 'screenshot.png',
+                     f'debug',
+                     'Working, travel')
 
         cici.press_key('c')
         
@@ -382,6 +387,10 @@ def freehold_farmer(to_run):
                 except Exception as e:
 
                     print(f'failed in pred map: {e}')
+                    send_request(f'Failed running, error: {e}', 'screenshot.png',
+                                 f'debug',
+                                 'Fauked, travel')
+
                     distance = 10
                     cp_angle = 20
                     player_angle = 10
@@ -462,7 +471,9 @@ def freehold_farmer(to_run):
             if damage_code in damage_key_map:
                 cici.press_key(damage_key_map[damage_code])
 
-        print('fighting')
+        send_request(f'started damaging', 'screenshot.png',
+                     f'debug',
+                     'Working, damage')
 
         combat_ticker = 0
         rotate = 0
@@ -560,7 +571,6 @@ def freehold_farmer(to_run):
                             send_request(f'exception in damage:{e}', 'screenshot.png',
                                          f'debug',
                                          'Exception, damage')
-
                             continue
 
 
@@ -909,19 +919,33 @@ if __name__ == "__main__":
                 # freehold_farmer(runs_amount)
 
                 print('finished all runs')
-                image_sent = capture_mode('fhd')
+
+                capture_mode('fhd')
                 send_request('logging out','screenshot.png',f'{full_cycle}/{total_ran}')
+
                 # logout()
-                image_sent = capture_mode('fhd')
+
+                capture_mode('fhd')
                 send_request('logged out','screenshot.png',f'{full_cycle}/{total_ran}')
                 afterwork_nap = 1 + uniform(0,3)
 
                 total_ran += runs_amount
 
                 print(f'after work will sleep for {afterwork_nap}, already did: {total_ran} runs')
-                sleep(afterwork_nap*60*60)
-
+                # sleep(afterwork_nap*60*60)
+                sleep(30)
                 full_cycle +=1
+
+            except ConnectionError:
+                print('conneror except')
+                send_request(f'failed to log in', 'screenshot.png',
+                             f'debug',
+                             'Failure, loginer')
+                break
+
             except Exception as e:
+                send_request(f'failed in main error: {e}', 'screenshot.png',
+                             f'debug',
+                             'Failure, main')
                 print(f'whole fail, {e}')
 
