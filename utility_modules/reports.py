@@ -6,7 +6,9 @@ import json
 def send_request(message=None, image=None, status=None, additional_info=None):
     with open('personal_cache/maintainer_creds.txt', 'r') as file:
         lines = file.readlines()
-        pc_id, worker_id, request_url = lines[0], lines[1], lines[1]
+        pc_id, worker_id, request_url = lines[0].strip(), lines[1].strip(), lines[2].strip() + '/receive_data'
+        print (pc_id, worker_id, request_url)
+
     data = {
         "sender": {
             "PC_ID": pc_id,
@@ -32,5 +34,5 @@ def send_request(message=None, image=None, status=None, additional_info=None):
         files["data"] = (None, data_json)  # Add image as a file object
 
     print('sending request')
-    response = requests.post("http://maintainer:5000/receive_data", files=files)
+    response = requests.post(request_url, files=files)
 

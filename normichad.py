@@ -171,6 +171,7 @@ def loginer():
             infobox = capture_mode('infobox')
             if sum(infobox[195,390]) == 0:
                 print('we logged in')
+                capture_mode('fhd')
                 send_request(f'logged in', 'screenshot.png',
                              f'debug',
                              'Working, checker')
@@ -257,7 +258,7 @@ def freehold_farmer(to_run):
         distance_old = 0
         timeouter = 0
         debug = 0
-
+        capture_mode('fhd')
         send_request(f'started travelling', 'screenshot.png',
                      f'debug',
                      'Working, travel')
@@ -387,6 +388,7 @@ def freehold_farmer(to_run):
                 except Exception as e:
 
                     print(f'failed in pred map: {e}')
+                    capture_mode('fhd')
                     send_request(f'Failed running, error: {e}', 'screenshot.png',
                                  f'debug',
                                  'Fauked, travel')
@@ -470,7 +472,7 @@ def freehold_farmer(to_run):
 
             if damage_code in damage_key_map:
                 cici.press_key(damage_key_map[damage_code])
-
+        capture_mode('fhd')
         send_request(f'started damaging', 'screenshot.png',
                      f'debug',
                      'Working, damage')
@@ -780,16 +782,19 @@ def freehold_farmer(to_run):
 
 
     runs_did = 0
-    death_count = 0
-    cp_failures = 0
 
     while runs_did < to_run:
         runs_did += 1
         run_start = datetime.now()
+        capture_mode('fhd')
+        send_request(f'starting run f(freehold_farmer)', 'screenshot.png', f'did {runs_did}',
+                     'IndexError, freehold_farmer')
 
         for key, cp_list in fhd_route_dict.items():
             if key == 'RETURN':
 
+                send_request(f'starting to sellin {key}', 'screenshot.png', f'run_number:{runs_did}',
+                             'IndexError, freehold_farmer')
                 damage(model_TARGET, model_RARROW)
                 sleep(1)
                 sell_loot()
@@ -834,10 +839,16 @@ def freehold_farmer(to_run):
 
                 check_reset(run_start)
                 force_move(model_LOCATION, model_MARROW, 'angle_reset')
+                send_request(f'resetting:{key}', 'screenshot.png', f'run_number:{runs_did}',
+                             'Running, freehold_farmer')
                 reset_dung()
+                send_request(f'resetted:{key}', 'screenshot.png', f'run_number:{runs_did}',
+                             'Running, freehold_farmer')
 
             else:
                 try:
+                    send_request(f'starting:{key}', 'screenshot.png', f'run_number:{runs_did}',
+                                 'Running, freehold_farmer')
                     travel(key, cp_list,model_LOCATION, model_MARROW)
                     damage(model_TARGET, model_RARROW)
                 except IndexError:
@@ -883,8 +894,8 @@ def freehold_farmer(to_run):
                     print(f'failed cuz {e}')
                     cici.press_key('w', 0.3)
 
-
-if __name__ == "__main__":
+send_request(None, None,None, None)
+if __name__ == "__main__" and False:
 
     
     wake_hrs = random.randint(6, 8)
@@ -911,19 +922,19 @@ if __name__ == "__main__":
             try:
                 print('redy to go')
 
-                # loginer()
+                loginer()
                 image_sent = capture_mode('fhd')
                 send_request('logined','screenshot.png',f'{full_cycle}/{total_ran}')
-                # grp_creation()
+                grp_creation()
 
-                # freehold_farmer(runs_amount)
+                freehold_farmer(runs_amount)
 
                 print('finished all runs')
 
                 capture_mode('fhd')
                 send_request('logging out','screenshot.png',f'{full_cycle}/{total_ran}')
 
-                # logout()
+                logout()
 
                 capture_mode('fhd')
                 send_request('logged out','screenshot.png',f'{full_cycle}/{total_ran}')
@@ -932,18 +943,20 @@ if __name__ == "__main__":
                 total_ran += runs_amount
 
                 print(f'after work will sleep for {afterwork_nap}, already did: {total_ran} runs')
-                # sleep(afterwork_nap*60*60)
+                sleep(afterwork_nap*60*60)
                 sleep(30)
                 full_cycle +=1
 
             except ConnectionError:
                 print('conneror except')
+                capture_mode('fhd')
                 send_request(f'failed to log in', 'screenshot.png',
                              f'debug',
                              'Failure, loginer')
                 break
 
             except Exception as e:
+                capture_mode('fhd')
                 send_request(f'failed in main error: {e}', 'screenshot.png',
                              f'debug',
                              'Failure, main')
