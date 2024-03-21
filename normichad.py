@@ -83,7 +83,7 @@ fhd_route_dict = {
  [[235, 339], 12, None, None] #run harpoon
  ],
 
-'boss2_TO_boss3':[ 
+'boss2_TO_boss3':[
  [[201, 350], 8, None, None], #center
  [[177, 362], 8, None, None], #biqmmboi
  [[170, 396], 6, None, None], # right caster
@@ -129,10 +129,10 @@ def loginer():
         script_path = os.path.abspath(__file__)
         shortcut_path = os.path.join(os.path.dirname(script_path), f"{shortcut_name}.lnk")
 
-    try:
-        subprocess.Popen(['start', '', shortcut_path], shell = True)
-    except subprocess.CalledProcessError as e :
-        print(f'error {e}')
+        try:
+            subprocess.Popen(['start', '', shortcut_path], shell = True)
+        except subprocess.CalledProcessError as e :
+            print(f'error {e}')
 
 
     def login(creds):
@@ -199,7 +199,7 @@ def freehold_farmer(to_run):
     model_RARROW = YOLO('instruments\\RARROW_SMALL5.pt')
     model_RARROW.to('cuda')
 
-            
+
     def travel(key, cp_list,model_LOCATION, model_MARROW):
         def actions(state_input):
             match state_input:
@@ -263,7 +263,7 @@ def freehold_farmer(to_run):
                      'Working, travel')
 
         cici.press_key('c')
-        
+
         cici.press_key('m')
         sleep(0.4)
         cici.press_key('m')
@@ -272,7 +272,7 @@ def freehold_farmer(to_run):
         infobox = capture_mode('infobox')
         combat_B, _, _ = infobox[50, 350]
         dung_B, dung_G, dung_R = infobox[150,350]
-        
+
         if dung_B == 255:
             print('we arent in dung')
             raise KeyError()
@@ -319,7 +319,7 @@ def freehold_farmer(to_run):
                 required_distance = checkpoint[1]
                 required_angle = checkpoint[2]
                 print(f"predicting for cp{checkpoint_coords, required_distance, required_angle}")
-                
+
                 try:
                     while not MAP_SCT:
                         MAP = capture_mode('map')
@@ -396,14 +396,14 @@ def freehold_farmer(to_run):
                     cp_angle = 20
                     player_angle = 10
 
-                
+
             else:
                 checkpoint_coords = checkpoint[0]
                 required_angle = checkpoint[2]
                 print(f"using old predict for new cp{checkpoint_coords, required_distance, required_angle}")
 
                 location, vector_player,vector_north, player_angle = player_data_old[0], player_data_old[1], player_data_old[2], player_data_old[3]
-                
+
                 vector_cp = [checkpoint_coords[0] - location[0], checkpoint_coords[1] - location[1]]
                 cp_angle = round(calculate_angle_north(vector_cp, vector_north))
                 distance = round(abs(checkpoint_coords[0] - location[0]) + abs(checkpoint_coords[1] - location[1]))
@@ -483,7 +483,7 @@ def freehold_farmer(to_run):
         infobox = capture_mode('infobox')
         combat_B, _ , _ = infobox[50,350]
         nomove = 0
-        
+
         if combat_B == 255:
             return
         else:
@@ -506,7 +506,7 @@ def freehold_farmer(to_run):
             else:
                 combat_ticker = 0
                 _, _ , target_R = infobox[150,150]
-                
+
                 if target_R == 255:
                     print('no target')
                     cici.press_key('n')
@@ -529,7 +529,7 @@ def freehold_farmer(to_run):
                     range_B, _ , range_R = infobox[50,50]
                     _, _ , facing_R = infobox[50, 150]
                     RADAR = capture_mode('radar')
-                    
+
                     if nomove > 2:
                         nomove = 0
                         try:
@@ -601,7 +601,7 @@ def freehold_farmer(to_run):
                                 cici.press_key('s', 0.3)
                                 fallback = 0
 
-                        
+
 
                     nomove += 1
                     cici.press_key('n')
@@ -634,7 +634,7 @@ def freehold_farmer(to_run):
 
                 while f < len(force_list) and succ_killer < 5:
                     force_coords = force_list[f]
-                    
+
                     MAP = capture_mode('map')
                     try:
                         results_LOCATION = model_LOCATION.predict(MAP)
@@ -657,7 +657,7 @@ def freehold_farmer(to_run):
                                 magnitude_player = calculate_vector_magnitude(vector_player)
                                 vector_north = [0, vector_player[1] - magnitude_player]
                                 player_angle = round(calculate_angle_north(vector_player, vector_north))
-                                
+
                                 vector_force = [force_coords[0] - location[0], force_coords[1] - location[1]]
                                 force_angle = round(calculate_angle_north(vector_force, vector_north))
 
@@ -666,9 +666,9 @@ def freehold_farmer(to_run):
                         print(f"failed because {e}")
                         success = False
                         return success
-                    
 
-                    
+
+
                     cici.move_cursor_steps(960,540)
                     mouse_moves = cici.calculate_rotation_direction(player_angle, force_angle)
                     for index, move in enumerate(mouse_moves):
@@ -699,7 +699,7 @@ def freehold_farmer(to_run):
                                 magnitude_player = calculate_vector_magnitude(vector_player)
                                 vector_north = [0, vector_player[1] - magnitude_player]
                                 player_angle = round(calculate_angle_north(vector_player, vector_north))
-                                
+
                                 vector_force = [force_coords[0] - location[0], force_coords[1] - location[1]]
                                 force_angle = round(calculate_angle_north(vector_force, vector_north))
 
@@ -710,10 +710,10 @@ def freehold_farmer(to_run):
 
                         success = False
                         return success
-                    
+
                     if distance_new < 4:
                         f += 1
-                        
+
                     else:
                         cici.move_cursor_steps(960,540)
                         mouse_moves = cici.calculate_rotation_direction(player_angle, force_angle)
@@ -722,7 +722,7 @@ def freehold_farmer(to_run):
                             sleep(0.04)
 
                         cici.press_key('a', 0.2)
-                        cici.gas(distance, 22.5)                            
+                        cici.gas(distance, 22.5)
 
                     succ_killer += 1
                     print(succ_killer)
@@ -732,12 +732,12 @@ def freehold_farmer(to_run):
                     return success
 
                 success = True
-                
+
                 return success
 
             case 'angle_reset':
                 force_angle = 17
-                    
+
                 MAP = capture_mode('map')
                 try:
                     results_LOCATION = model_LOCATION.predict(MAP)
@@ -751,7 +751,7 @@ def freehold_farmer(to_run):
 
                         results_ARROW = model_MARROW.predict(MARROW)
                         boxes, keypoints = results_ARROW[0].boxes, results_ARROW[0].keypoints
-                        
+
                         if boxes:
                             box = boxes.xyxy[0].tolist()
                             position = [((box[0] + box[2]) / 2), (box[1] + box[3]) / 2]
@@ -759,7 +759,7 @@ def freehold_farmer(to_run):
                             vector_player = [pointer[0] - position[0], pointer[1] - position[1]]
                             magnitude_player = calculate_vector_magnitude(vector_player)
                             vector_north = [0, vector_player[1] - magnitude_player]
-                            
+
                             player_angle = round(calculate_angle_north(vector_player, vector_north))
                     else:
                         success = False
@@ -865,7 +865,7 @@ def freehold_farmer(to_run):
                     cici.press_key('5')
                     print('sslleeeeppin')
                     sleep(90)
-                    
+
                     check_reset(run_start)
                     reset_dung()
                     break
@@ -900,7 +900,7 @@ def freehold_farmer(to_run):
 
 if __name__ == "__main__":
 
-    
+
     wake_hrs = random.randint(6, 8)
     sleep_hrs = random.randint(19, 23)
     print(f"wakin {wake_hrs}, sslleeeeppin: {sleep_hrs}")
@@ -917,10 +917,10 @@ if __name__ == "__main__":
             left_sleeping = wake_hrs - current_hour + uniform(0,2)
             if current_hour > sleep_hrs:
                 left_sleeping = 24 - current_hour + wake_hrs + uniform(0,1)
-            
+
             print(f'currently sleep for for {left_sleeping}')
             sleep(left_sleeping*60*60)
-        
+
         else:
             try:
                 print('redy to go')
