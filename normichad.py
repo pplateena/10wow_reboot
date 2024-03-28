@@ -937,16 +937,16 @@ if __name__ == "__main__" and True:
             try:
                 print('redy to go')
 
-                # loginer()
-                # capture_mode('fhd')
-                # send_request(f'logined for s:{full_cycle}, r: {runs_amount}','screenshot.png',f'work', 'started full cycle')
+                loginer()
+                capture_mode('fhd')
+                send_request(f'logined for s:{full_cycle}, r: {runs_amount}','screenshot.png',f'work', 'started full cycle')
 
                 if reshala():
                     print('reshala did it')
                 else:
                     print('reshala failed')
                     break
-                # grp_creation()
+                grp_creation()
 
                 freehold_farmer(runs_amount)
 
