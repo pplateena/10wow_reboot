@@ -368,6 +368,7 @@ def freehold_farmer(to_run):
                             cp_angle = round(calculate_angle_north(vector_cp, vector_north))
 
                             distance = round(abs(checkpoint_coords[0] - location[0]) + abs(checkpoint_coords[1] - location[1]))
+                            print('calced distance', distance)
                             if distance > 200:
                                 print(f"wrong pred, {distance}")
                                 cici.press_key('w', 0.2)
@@ -416,7 +417,7 @@ def freehold_farmer(to_run):
                 vector_cp = [checkpoint_coords[0] - location[0], checkpoint_coords[1] - location[1]]
                 cp_angle = round(calculate_angle_north(vector_cp, vector_north))
                 distance = round(abs(checkpoint_coords[0] - location[0]) + abs(checkpoint_coords[1] - location[1]))
-
+                print('calced dist without new sct', distance)
 
 
 
@@ -443,6 +444,7 @@ def freehold_farmer(to_run):
                 debug = 0
 
             actions(debug)
+            print('suceeded with actions')
             distance_old = distance
             need_new_SCT = True
 

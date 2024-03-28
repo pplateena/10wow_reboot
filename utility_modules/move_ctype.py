@@ -91,6 +91,7 @@ def calculate_rotation_direction(player_angle, checkpoint_angle, delta_only=Fals
         axis = total_moves * limit_rotation
 
         moves_list = generate_list(axis)
+        return moves_list
 
 
     else:

@@ -307,17 +307,12 @@ def decision_maker(going_todo=None, location= None):
         print('extra action: ', extra_action)
         match extra_action:
             case 'portal':
-                zid_before = sum(capture_mode('addon_coords')[0,20])
-
                 cici.press_key('l')
                 cici.move_cursor_steps(960,540)
                 cici.press_left_button()
                 cici.release_left_button()
-                sleep(20)
-                zid_after = sum(capture_mode('addon_coords')[0,20])
+                sleep(5)
 
-                if zid_before != zid_after:
-                    print('succeeded in tp')
             case 'horizontal_fly':
                 gonnafly('horizontal')
             case '23down':
@@ -355,9 +350,9 @@ def understand_situation():
 
     situational_routes = {
         "Thaldrassus": {
-            "tavern": [(48.1,49.12), (49.88,53.46), (52.93,56.50), (53.48,55.49, 0.2), 'portal'],
-            "out_tavern": [(52.93,56.50), (53.48,55.49, 0.2), 'portal'],
-            "portal": [(52.93,56.50), (53.48,55.49, 0.2), 'portal'],
+            "tavern": [(48.1,49.12), (49.88,53.46), (53.11,56.59,0.2), (53.48,55.49, 0.2), 'portal'],
+            "out_tavern": [(53.11,56.59,0.2), (53.48,55.49, 0.2), 'portal'],
+            "portal": [(53.11,56.59,0.2), (53.48,55.49, 0.2), 'portal'],
                         },
         "Timetravel": {
             "to_drustvar": [(56.15,59.89), (60.46, 66.77), (60.84, 68.64, 0.2, 220), 'portal'],
@@ -368,7 +363,7 @@ def understand_situation():
         "Tiragarde": {
             "to_align": [(74.61, 64.58)],
             "angle_down": ['23down',(85.43, 77.59), (84.77, 78.44), (84.57,78.80,0.1,255)],
-            "close_freehold": ['horizontal_fly', (84.97,78.39, 0.15), (84.77, 78.44,0.15), (84.57,78.80,0.15,255)],
+            "close_freehold": ['horizontal_fly', (84.57,78.80,0.15,255)],
             "freehold_tavern": ['get_up', (85.41, 80.11), (84.76,78.73)]
         }
     }
