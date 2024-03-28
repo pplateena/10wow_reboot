@@ -40,9 +40,34 @@ def capture_mode(mode, region=None):
                 screenshot_prepared = cv2.cvtColor(screenshot_np, cv2.COLOR_RGBA2RGB)
                 return screenshot_prepared
 
+            case 'listed_auctions':
+                #search / favourites window
+                region_window = (212, 218, 804, 617)
+                screenshot = sct.grab(region_window)
+                screenshot_np = np.array(screenshot)
+                screenshot_prepared = cv2.cvtColor(screenshot_np, cv2.COLOR_RGBA2RGB)
+                return screenshot_prepared
+
             case 'fhd':
                 screenshot = sct.shot(output='screenshot.png')
                 return 'ua'
+
+            case 'addon_coords':
+
+                region_window = (835, 1050, 1050, 1051)
+
+                screenshot = sct.grab(region_window)
+                screenshot_np = np.array(screenshot)
+                screenshot_prepared = cv2.cvtColor(screenshot_np, cv2.COLOR_RGBA2RGB)
+                if sum(screenshot_prepared[0,-1]) != 384:
+                    print(screenshot_prepared[0,-1])
+                    return False
+
+
+                return screenshot_prepared
+
+
+
 
 def crop(image, mode, map_position=None):
     match mode:

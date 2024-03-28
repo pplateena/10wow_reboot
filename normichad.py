@@ -10,6 +10,11 @@ from datetime import datetime, timedelta
 import os
 import subprocess
 from random import uniform
+import multiprocessing as mp
+
+
+
+
 
 
 
@@ -19,6 +24,7 @@ from utility_modules.resets import reset_dung, sell_loot, change_action, logout,
 from utility_modules.calculus import calculate_vector_magnitude, calculate_angle_north
 from utility_modules.capture import capture_mode, crop
 from utility_modules.reports import send_request
+from utility_modules.world_movement import reshala
 
 fhd_route_dict = {
 'first_pull': [[[727, 141], 8, None, None],# left
@@ -200,7 +206,7 @@ def freehold_farmer(to_run):
     model_RARROW.to('cuda')
 
 
-    def travel(key, cp_list,model_LOCATION, model_MARROW):
+    def travel(key, cp_list,model_LOCATION, model_MARROW, model_TARGET, model_RARROW):
         def actions(state_input):
             match state_input:
                 case 0 | 1:
@@ -289,7 +295,7 @@ def freehold_farmer(to_run):
             cici.move_cursor_steps(960, 540)
 
             infobox = capture_mode('infobox')
-            death_B, death_G, _ = infobox[150, 50]
+            death_B, death_G, death_R = infobox[150, 50]
 
             if death_G == 255:
                 cici.press_key('9')
@@ -297,8 +303,11 @@ def freehold_farmer(to_run):
                 cici.move_cursor_steps(900, 150)
                 cici.press_left_button()
                 cici.release_left_button()
-
                 raise ValueError('dead')
+            if death_R == 255:
+                print('we found boss')
+                damage(model_TARGET,model_RARROW)
+                print('we killed boss')
 
             checkpoint = cp_list[n_checkpoints]
             required_distance = checkpoint[1]
@@ -798,7 +807,7 @@ def freehold_farmer(to_run):
                 sleep(1)
                 sell_loot()
                 try:
-                    travel(key, cp_list,model_LOCATION, model_MARROW)
+                    travel(key, cp_list,model_LOCATION, model_MARROW, model_TARGET, model_RARROW)
                 except IndexError:
                     print('got lost resetting')
                     capture_mode('fhd')
@@ -850,7 +859,7 @@ def freehold_farmer(to_run):
                     capture_mode('fhd')
                     send_request(f'starting:{key}, run number: {runs_did}', 'screenshot.png', f'work_flow',
                                  'Running, freehold_farmer')
-                    travel(key, cp_list,model_LOCATION, model_MARROW)
+                    travel(key, cp_list,model_LOCATION, model_MARROW, model_TARGET, model_RARROW)
                     damage(model_TARGET, model_RARROW)
                 except IndexError:
                     #cp failure
@@ -898,7 +907,8 @@ def freehold_farmer(to_run):
                     cici.press_key('w', 0.3)
 
 
-if __name__ == "__main__":
+
+if __name__ == "__main__" and True:
 
 
     wake_hrs = random.randint(6, 8)
@@ -925,10 +935,16 @@ if __name__ == "__main__":
             try:
                 print('redy to go')
 
-                loginer()
-                capture_mode('fhd')
-                send_request(f'logined for s:{full_cycle}, r: {runs_amount}','screenshot.png',f'work', 'started full cycle')
-                grp_creation()
+                # loginer()
+                # capture_mode('fhd')
+                # send_request(f'logined for s:{full_cycle}, r: {runs_amount}','screenshot.png',f'work', 'started full cycle')
+
+                if reshala():
+                    print('reshala did it')
+                else:
+                    print('reshala failed')
+                    break
+                # grp_creation()
 
                 freehold_farmer(runs_amount)
 

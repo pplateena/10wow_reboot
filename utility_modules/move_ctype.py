@@ -14,10 +14,10 @@ MOUSEEVENTF_RIGHTUP = 0x0010
 SM_CXSCREEN = 0
 SM_CYSCREEN = 1
 
-
 # Get the screen width and height
 screen_width = user32.GetSystemMetrics(SM_CXSCREEN)
 screen_height = user32.GetSystemMetrics(SM_CYSCREEN)
+
 
 # Define the MouseInput structure
 class MouseInput(ctypes.Structure):
@@ -28,22 +28,26 @@ class MouseInput(ctypes.Structure):
                 ("time", ctypes.c_ulong),
                 ("dwExtraInfo", ctypes.POINTER(ctypes.c_ulong))]
 
+
 # Define the Input structure
 class Input(ctypes.Structure):
     class _INPUT(ctypes.Union):
         _fields_ = [("mi", MouseInput)]
+
     _anonymous_ = ("_input",)
     _fields_ = [("_type", ctypes.c_ulong), ("_input", _INPUT)]
+
 
 # Define input event constants
 INPUT_MOUSE = 0
 INPUT_KEYBOARD = 1  # Add this line for keyboard input
 
-def calculate_rotation_direction(player_angle, checkpoint_angle):
+
+def calculate_rotation_direction(player_angle, checkpoint_angle, delta_only=False):
     import math
-    
+
     def generate_list(number):
-    
+
         result_list = []
         if number < 0:
             while number <= -960:
@@ -59,51 +63,54 @@ def calculate_rotation_direction(player_angle, checkpoint_angle):
                 result_list.append(number)
         return result_list
 
-
-    if abs(player_angle-checkpoint_angle)>180:
+    delta = 0
+    if abs(player_angle - checkpoint_angle) > 180:
         if checkpoint_angle > player_angle:
-            delta = (checkpoint_angle-360) - player_angle
+            delta = (checkpoint_angle - 360) - player_angle
         if player_angle > checkpoint_angle:
-            delta = (360-player_angle) + checkpoint_angle
+            delta = (360 - player_angle) + checkpoint_angle
     else:
-        if player_angle >checkpoint_angle:
+        if player_angle > checkpoint_angle:
             delta = checkpoint_angle - player_angle
         if checkpoint_angle > player_angle:
             delta = checkpoint_angle - player_angle
 
     counter = 1
-    moves_list = []
+
     delta = delta / 0.96875
 
+    if delta_only:
+        return delta
 
+    moves_list = []
+    if delta < 0:
+        total_moves = delta / 120
 
-    if delta<0:
-        total_moves = delta/120
-        
         limit_rotation = 960
 
-        axis = total_moves*limit_rotation
-        
+        axis = total_moves * limit_rotation
+
         moves_list = generate_list(axis)
 
-    
+
     else:
-        
-        total_moves = delta/120   
+
+        total_moves = delta / 120
         limit_rotation = 960
 
-        axis = total_moves*limit_rotation
-        
+        axis = total_moves * limit_rotation
+
         moves_list = generate_list(axis)
 
+        return moves_list
 
-    return moves_list
 
 def press_right_button():
     input_ = Input()
     input_._type = INPUT_MOUSE
     input_._input.mi.dwFlags = MOUSEEVENTF_RIGHTDOWN
     user32.SendInput(1, ctypes.byref(input_), ctypes.sizeof(input_))
+
 
 def release_right_button():
     input_ = Input()
@@ -116,11 +123,13 @@ def release_right_button():
 MOUSEEVENTF_LEFTDOWN = 0x0002
 MOUSEEVENTF_LEFTUP = 0x0004
 
+
 def press_left_button():
     input_ = Input()
     input_._type = INPUT_MOUSE
     input_._input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN
     user32.SendInput(1, ctypes.byref(input_), ctypes.sizeof(input_))
+
 
 def release_left_button():
     input_ = Input()
@@ -128,26 +137,27 @@ def release_left_button():
     input_._input.mi.dwFlags = MOUSEEVENTF_LEFTUP
     user32.SendInput(1, ctypes.byref(input_), ctypes.sizeof(input_))
 
+
 def move_mouse_steps(end_x, end_y):
     start_x = 960
     start_y = 540
     diff = end_x - 960
 
-    coef = 1 - (1000-abs(diff))/1000
+    coef = 1 - (1000 - abs(diff)) / 1000
 
-    num_steps = ceil(2 + 10*coef)
+    num_steps = ceil(2 + 10 * coef)
 
     step_duration = 0.03
     dx = (end_x - start_x) / num_steps
     dy = (end_y - start_y) / num_steps
-   
+
     press_right_button()  # Press right mouse button
     sleep(0.03)
 
     for step in range(1, num_steps + 1):
         x = start_x + int(dx * step)
         y = start_y + int(dy * step)
-        
+
         input_ = Input()
         input_._type = INPUT_MOUSE
         input_._input.mi.dx = int(x * 65536 / screen_width)
@@ -155,13 +165,13 @@ def move_mouse_steps(end_x, end_y):
         input_._input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE
 
         user32.SendInput(1, ctypes.byref(input_), ctypes.sizeof(input_))
-        
+
         sleep(step_duration)  # Random sleep time
 
-
-    release_right_button() 
+    release_right_button()
     sleep(0.03)
-        
+
+
 def move_cursor_steps(end_x, end_y):
     from pyautogui import position
     current_position = position()
@@ -177,7 +187,7 @@ def move_cursor_steps(end_x, end_y):
     for step in range(1, num_steps + 1):
         x = start_x + int(dx * step)
         y = start_y + int(dy * step)
-        
+
         input_ = Input()
         input_._type = INPUT_MOUSE
         input_._input.mi.dx = int(x * 65536 / screen_width)
@@ -185,10 +195,8 @@ def move_cursor_steps(end_x, end_y):
         input_._input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE
 
         user32.SendInput(1, ctypes.byref(input_), ctypes.sizeof(input_))
-        
-        sleep(step_duration)  # Random sleep time
-        
 
+        sleep(step_duration)  # Random sleep time
 
 
 # Define constants for keyboard keys
@@ -206,13 +214,15 @@ VK_CODES = {
     '\\': 0xDC, '|': 0xDC, ';': 0xBA, ':': 0xBA,
     "'": 0xDE, '"': 0xDE, ',': 0xBC, '<': 0xBC,
     '.': 0xBE, '>': 0xBE, '/': 0xBF, '?': 0xBF,
-    'enter': 0x0D, 'space': 0x20, 'esc': 0x1B, 'shift': 0x10, 'tab':0x09, 
-    # Add more key codes as needed
+    'enter': 0x0D, 'space': 0x20, 'esc': 0x1B, 'shift': 0x10, 'tab': 0x09,
+    'win': 0x5C, 'ctrl': 0x11,
+    'arrow_up': 0x26, 'arrow_down': 0x28, 'arrow_left': 0x25, 'arrow_right': 0x27,
+
 }
 
 
 # Function to simulate a single key press
-def press_key(key, hold = 0):
+def press_key(key, hold=0):
     if key in VK_CODES:
         vk_code = VK_CODES[key]
         user32.keybd_event(vk_code, 0, 0, 0)  # Key down
@@ -225,17 +235,22 @@ def keybd_down(key):
         vk_code = VK_CODES[key]
         user32.keybd_event(vk_code, 0, 0, 0)  # Key down
 
+
 def keybd_up(key):
     if key in VK_CODES:
         vk_code = VK_CODES[key]
-        user32.keybd_event(vk_code, 0, 0x0002, 0) 
+        user32.keybd_event(vk_code, 0, 0x0002, 0)
+
+    # Function to type a string
 
 
-# Function to type a string
 def type_string(text):
-    typing_interval=random.uniform(0.07,0.3)
+    typing_interval = random.uniform(0.07, 0.3)
 
     for char in text:
+        if char is " ":
+            press_key('space')
+
         if char.isupper() or char == '@':
 
             keybd_down('shift')
@@ -246,7 +261,6 @@ def type_string(text):
             press_key(char, typing_interval)
 
 
-
 def gas(distance, speed):
-    press_key('w', distance/speed)
+    press_key('w', distance / speed)
 
