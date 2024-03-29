@@ -307,7 +307,7 @@ def decision_maker(going_todo=None, location= None):
         print('extra action: ', extra_action)
         match extra_action:
             case 'portal':
-                cici.press_key('l')
+                cici.press_key('n')
                 cici.move_cursor_steps(960,540)
                 cici.press_left_button()
                 cici.release_left_button()
