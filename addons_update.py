@@ -35,4 +35,4 @@ creds = getcreds()
 download_url = creds[0] + "/keeper/addons_download"
 target_dir = creds[1]
 
-# download_and_extract_zip(download_url, target_dir)
+download_and_extract_zip(download_url, target_dir)
