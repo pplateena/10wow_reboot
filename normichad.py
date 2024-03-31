@@ -910,7 +910,7 @@ def freehold_farmer(to_run):
 
 
 
-if __name__ == "__main__" and True:
+if __name__ == "__main__":
 
 
     wake_hrs = random.randint(6, 8)

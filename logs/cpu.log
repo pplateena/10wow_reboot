@@ -1,6 +1,0 @@
-10/31 23:58:27.507  vendor: GenuineIntel
-10/31 23:58:27.507  branding: Genuine Intel(R) CPU 0000 @ 2.40GHz
-10/31 23:58:27.507  features: lahf64 cmpxchg16b sse sse2 sse3 ssse3 sse41 sse42 avx avx2 aesni clmul rdrand 
-10/31 23:58:27.507  sockets: 1
-10/31 23:58:27.507  cores: 6
-10/31 23:58:27.507  threads: 12

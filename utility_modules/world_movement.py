@@ -152,7 +152,7 @@ def gather_data(queue = None, stop_flag = None,):
             return player_coords, player_angle, shapeshift_req, location
 
         if sleep_time > 0:
-            print('sleepster')
+
             sleep(sleep_time)
 
 
@@ -172,7 +172,7 @@ def mp_moving(checkpoints_list):
 def mover(queue,stop_flag,cp_list):
     print('started mover')
     for checkpoint in cp_list:
-
+        for_starter = time()
         match len(checkpoint):
             case 2:
                 print('case 2 default')
@@ -189,13 +189,22 @@ def mover(queue,stop_flag,cp_list):
                 req_angle = checkpoint[3]
 
         _, _,_, first_location = queue.get()
-
+        old_magnitude = 100
         while True:
+
             if stop_flag.value:
                 break
 
             player_coords, player_angle, shapeshift_req, location = queue.get()
             delta, magnitude = movement_calculations(player_coords, player_angle, checkpoint)
+
+            difference_magnitude = old_magnitude - magnitude
+            if difference_magnitude < 0.01 and difference_magnitude > 0:
+                print('happened random')
+                cici.press_key(random.choice(['d', 'a', 'space', 's']), 0.1)
+
+
+            old_magnitude = magnitude
 
             if shapeshift_req == 50:
                 cici.press_key('7')
@@ -249,6 +258,12 @@ def mover(queue,stop_flag,cp_list):
                 cv2.setWindowProperty(window_name, cv2.WND_PROP_TOPMOST, 1)
                 cv2.imshow(window_name, img)
                 cv2.waitKey(1)
+
+            cp_tooktime = time() - for_starter
+            if cp_tooktime > 120:
+                print('we fucked up in time spent')
+                break
+
 
         ##req angle
         while req_angle != None:
@@ -350,9 +365,9 @@ def understand_situation():
 
     situational_routes = {
         "Thaldrassus": {
-            "tavern": [(48.1,49.12), (49.88,53.46), (53.11,56.59,0.2), (53.48,55.49, 0.2), 'portal'],
-            "out_tavern": [(53.11,56.59,0.2), (53.48,55.49, 0.2), 'portal'],
-            "portal": [(53.11,56.59,0.2), (53.48,55.49, 0.2), 'portal'],
+            "tavern": [(48.1,49.12), (49.88,53.46), (53.11,56.76,0.2), (53.48,55.49, 0.2), 'portal'],
+            "out_tavern": [(53.11,56.76,0.2), (53.48,55.49, 0.2), 'portal'],
+            "portal": [(53.11,56.76,0.2), (53.48,55.49, 0.2), 'portal'],
                         },
         "Timetravel": {
             "to_drustvar": [(56.15,59.89), (60.46, 66.77), (60.84, 68.64, 0.2, 220), 'portal'],
@@ -363,7 +378,7 @@ def understand_situation():
         "Tiragarde": {
             "to_align": [(74.61, 64.58)],
             "angle_down": ['23down',(85.43, 77.59), (84.77, 78.44), (84.57,78.80,0.1,255)],
-            "close_freehold": ['horizontal_fly', (84.57,78.80,0.15,255)],
+            "close_freehold": ['23down', (84.57,78.80,0.15,255)],
             "freehold_tavern": ['get_up', (85.41, 80.11), (84.76,78.73)]
         }
     }
@@ -412,11 +427,3 @@ def reshala():
             print('in reshala we failed exception:', e)
             return False
 
-
-
-if __name__ == "__main__" and False:
-
-
-
-    toauc_list = [(45.55, 58.3), (44.91, 58.67), (42.57, 59.35, 0.1)]
-    mp_moving(toauc_list)
