@@ -8,3 +8,5 @@ personal_cache/*
 utility_modules/__pycache__/capture.cpython-311.pyc
 utility_modules/__pycache__/move_ctype.cpython-311.pyc
 utility_modules/__pycache__/world_movement.cpython-311.pyc
+*.lnk
+*.pyc

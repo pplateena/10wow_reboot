@@ -1,3 +1,5 @@
+import psutil
+import pyWinActivate
 from ultralytics import YOLO
 from time import sleep
 import win32gui
