@@ -2,7 +2,7 @@ import utility_modules.move_ctype as cici
 from utility_modules.capture import capture_mode
 from time import sleep
 from random import uniform
-import cv2
+from utility_modules.world_movement import reshala
 
 def grp_creation():
     cici.press_key('i')
@@ -130,16 +130,16 @@ def reset_dung():
             
             change_action('runner')
             sleep(0.3)
-            
-            mouse_moves = cici.calculate_rotation_direction(51, 245)
-            
-            for index, move in enumerate(mouse_moves):
-                cici.move_mouse_steps(960 + move, 450)
-                sleep(0.04)
-
-            cici.press_key('space', 0.1)
-            cici.press_key('w', 3)
-            sleep(3)
+            reshala()
+            # mouse_moves = cici.calculate_rotation_direction(51, 245)
+            #
+            # for index, move in enumerate(mouse_moves):
+            #     cici.move_mouse_steps(960 + move, 450)
+            #     sleep(0.04)
+            #
+            # cici.press_key('space', 0.1)
+            # cici.press_key('w', 3)
+            # sleep(3)
             reset_killer += 1
             if reset_killer >= 2:
 
