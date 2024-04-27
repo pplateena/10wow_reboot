@@ -12,3 +12,4 @@ utility_modules/__pycache__/world_movement.cpython-311.pyc
 *.pyc
 *.pyc
 /utility_modules/__pycache__
+*.xml

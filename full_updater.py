@@ -9,12 +9,10 @@ def get_paths():
         addons_path = lines[3]
         return main_url, addons_path
 
-
-
 def update_chad(url):
     chad_folder = os.getcwd()
     final_url = url.strip() + '/keeper/script_download'
-    print('script url: ', final_url)
+    print('script url: ', final_url, 'chad folder: ', chad_folder)
 
     try:
         response = requests.get(final_url)
@@ -26,6 +24,8 @@ def update_chad(url):
         with zipfile.ZipFile(os.path.join(chad_folder, "downloaded_script.zip"), 'r') as zip_ref:
             zip_ref.extractall(chad_folder)
 
+        os.remove(chad_folder + '/downloaded_script.zip')
+
         print(f"updated from script from site here: {chad_folder}")
 
     except requests.exceptions.RequestException as e:
@@ -33,7 +33,6 @@ def update_chad(url):
     except Exception as e:
         print(f"An error occurred: {e}")
     return print('done with script')
-
 
 def update_addons(url, target_folder):
     final_url = url.strip() + '/keeper/addons_download'
@@ -49,6 +48,8 @@ def update_addons(url, target_folder):
         with zipfile.ZipFile(os.path.join(target_folder, "downloaded_addons.zip"), 'r') as zip_ref:
             zip_ref.extractall(target_folder)
 
+        os.remove(target_folder, 'downloaded_addons.zip')
+
         print(f"addons updated: {target_folder}")
 
     except requests.exceptions.RequestException as e:
@@ -59,7 +60,7 @@ def update_addons(url, target_folder):
 
 if __name__ == "__main__":
     main_url, addons_path = get_paths()
-    print(f'url: {main_url}, addons_path: {addons_path}\n type: addons (A),script (S) or both (B)')
+    print(f'url: {main_url}addons_path: {addons_path}\ntype: addons (A),script (S) or both (B)')
     mode = input().lower()
     match mode:
 
