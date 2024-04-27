@@ -145,9 +145,6 @@ def loginer():
         print(creds)
         return creds
 
-
-
-
     def login(creds):
         login = creds[0]
         password = creds[1]
@@ -185,8 +182,6 @@ def loginer():
             infobox = capture_mode('infobox')
             if sum(infobox[195,390]) == 0:
                 print('we logged in')
-
-
                 break
             else:
                 print('not logged in atm')
@@ -194,8 +189,6 @@ def loginer():
                 counter += 1
                 if counter > 10:
                     raise ConnectionError("ss")
-
-
     creds = getcreds()
     login(creds)
     checker()
@@ -214,6 +207,7 @@ def freehold_farmer(to_run):
 
     def travel(key, cp_list,model_LOCATION, model_MARROW, model_TARGET, model_RARROW):
         def actions(state_input):
+            print(f'd{distance}, p{player_angle},c{cp_angle}')
             match state_input:
                 case 0 | 1:
                     if abs(player_angle - cp_angle) > 6:
@@ -234,6 +228,7 @@ def freehold_farmer(to_run):
                             sleep(0.04)
                         cici.press_key('a',0.2)
                         cici.gas(distance, 22.5)
+
                     else:
                         cici.press_key('a',0.2)
                         cici.gas(distance, 22.5)
@@ -261,7 +256,7 @@ def freehold_farmer(to_run):
                 case 3:
                     print("debug2")
                     cici.press_key(random.choice(['a', 'd']), random.uniform(0.6, 0.9))
-                    cici.press_key('w ', random.uniform(0.4, 0.6))
+                    cici.press_key('w ', 2)
 
                     debug = 0
 
@@ -386,7 +381,6 @@ def freehold_farmer(to_run):
                                 continue
 
                         else:
-
                             print('ahd to use else1')
                             distance = 10
                             cp_angle = 20
@@ -449,12 +443,8 @@ def freehold_farmer(to_run):
             else:
                 debug = 0
 
-            actions(debug)
-            print('suceeded with actions')
-            distance_old = distance
-            need_new_SCT = True
 
-            if n_checkpoints < 0:
+            if n_checkpoints < 0 or key == 'boss1_pull':
 
                 print("entered n_cps")
                 match key:
@@ -468,10 +458,27 @@ def freehold_farmer(to_run):
                     case 'tried_force':
                         print(f'failed force key:{key}')
                         raise IndexError('checkps')
+                    case 'boss1_pull':
+                        if location is not None:
+                            stuck_1boss = calculate_vector_magnitude((796 - location[0], 307 - location[1]))
+                            unstuck_1boss = calculate_vector_magnitude((773- location[0], 302 - location[1]))
+
+                            if stuck_1boss < unstuck_1boss:
+                                force_move(model_LOCATION,model_MARROW,'pos_fix','boss1_stuck')
+
+
+
 
                     case _:
                         print(f'idk watudu, key: {key}')
                         raise IndexError('checkps')
+
+            print('using actions for debug', debug)
+            actions(debug)
+
+            print('suceeded with actions')
+            distance_old = distance
+            need_new_SCT = True
 
     def damage(model_TARGET, model_RARROW):
         def do_damage(damage_color):
@@ -628,7 +635,7 @@ def freehold_farmer(to_run):
                     cici.press_key('n')
                     sleep(0.2)
 
-    def check_reset(start_time, run_time = 380):
+    def check_reset(start_time, run_time = 420):
         current_time = datetime.now()
 
         delta = current_time - start_time
@@ -641,10 +648,13 @@ def freehold_farmer(to_run):
         else:
             print(f"we aight, run took {delta}")
 
-    def force_move(model_LOCATION, model_MARROW, mode):
+    def force_move(model_LOCATION, model_MARROW, mode, stable_route=None):
+        print('started force_move')
         match mode:
-            case 'pos_understairs':
-                force_list = [(674, 337),[679, 326]]
+            case 'pos_fix':
+                match stable_route:
+                    case 'boss1_stuck':
+                        force_list = [(796, 324), (774, 296)]
                 f = 0
                 succ_killer = 0
                 print(f'force changing pos for force_coords{force_list[f]}')
@@ -660,6 +670,7 @@ def freehold_farmer(to_run):
                         if boxes:
                             box = boxes.xyxy[0].tolist()
                             location = [round((box[0] + box[2]) / 2), round((box[1] + box[3]) / 2)]
+                            print('HERE', location)
 
                             MARROW = crop(MAP, 'marrow', location)
 
@@ -683,7 +694,11 @@ def freehold_farmer(to_run):
                         print(f"failed because {e}")
                         success = False
                         return success
-
+                    if distance < 4:
+                        print(f'distance_new{distance_new}, distance{distance}')
+                        f += 1
+                        if f > len(force_coords):
+                            break
 
 
                     cici.move_cursor_steps(960,540)
@@ -692,7 +707,13 @@ def freehold_farmer(to_run):
                         cici.move_mouse_steps(960 + move, 540)
                         sleep(0.04)
 
-                    cici.gas(distance, 22.5)
+                    if succ_killer > 1:
+                        cici.keybd_down('w')
+                        cici.press_key('space')
+                        sleep(distance / 22.5)
+                        cici.keybd_up('w')
+                    else:
+                        cici.gas(distance, 22.5)
 
                     MAP = capture_mode('map')
                     try:
@@ -721,35 +742,29 @@ def freehold_farmer(to_run):
                                 force_angle = round(calculate_angle_north(vector_force, vector_north))
 
                                 distance_new = (abs(force_coords[0] - location[0]) + abs(force_coords[1] - location[1]))
+
+
+
                     except Exception as e:
                         print(f"failed because {e}")
-
-
                         success = False
                         return success
 
-                    if distance_new < 4:
+                    if distance < 4:
+                        print(f'distance_new{distance_new}, distance{distance}')
                         f += 1
+                        if f > len(force_coords):
+                            break
+                        continue
 
                     else:
-                        cici.move_cursor_steps(960,540)
-                        mouse_moves = cici.calculate_rotation_direction(player_angle, force_angle)
-                        for index, move in enumerate(mouse_moves):
-                            cici.move_mouse_steps(960 + move, 540)
-                            sleep(0.04)
-
-                        cici.press_key('a', 0.2)
-                        cici.gas(distance, 22.5)
-
-                    succ_killer += 1
-                    print(succ_killer)
-
-                if succ_killer == 5:
-                    success = False
-                    return success
+                        print(f'distance_new{distance_new}, distance{distance}')
+                        succ_killer += 1
+                        print(succ_killer)
+                        if succ_killer > 6:
+                            raise IndexError('force')
 
                 success = True
-
                 return success
 
             case 'angle_reset':
@@ -824,14 +839,16 @@ def freehold_farmer(to_run):
                     damage(model_TARGET, model_RARROW)
 
                     sleep(2)
+                    check_reset(run_start, 360)
                     cici.press_key('4')
                     print('pressed 4')
+
                     sleep(1)
                     cici.press_key('5')
                     print('sslleeeeppin')
-                    sleep(90)
+                    sleep(80)
 
-                    check_reset(run_start)
+
                     reset_dung()
                     break
                 except KeyError:
@@ -916,9 +933,8 @@ def freehold_farmer(to_run):
 
 
 
+
 if __name__ == "__main__":
-
-
     wake_hrs = random.randint(6, 8)
     sleep_hrs = random.randint(19, 23)
     print(f"wakin {wake_hrs}, sslleeeeppin: {sleep_hrs}")
