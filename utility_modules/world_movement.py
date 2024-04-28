@@ -34,7 +34,7 @@ def movement_calculations(player_coords, player_angle, checkpoint_coords, angle_
         except Exception as e:
                 delta = 1
                 print(f'exception, {e}')
-            
+
         return delta
 
     vector_checkpoint = (checkpoint_coords[0] - player_coords[0], -(checkpoint_coords[1] - player_coords[1]))
@@ -167,13 +167,13 @@ def gather_data(queue = None, stop_flag = None,):
 
             if stop_flag.value:
                 print('finished gatherer')
+                queue.put(None)
                 break
         else:
 
             return player_coords, player_angle, shapeshift_req, location
 
         if sleep_time > 0:
-
             sleep(sleep_time)
 def mover(queue,stop_flag,cp_list):
     print('started mover')
@@ -199,15 +199,25 @@ def mover(queue,stop_flag,cp_list):
                 print(f'case 4 for {checkpoint}')
                 req_dist = checkpoint[2]
                 req_angle = checkpoint[3]
+        print('trying to get first location')
 
+        if queue.get is None:
+            print('queue is empty, breaking')
+            return
         _, _,_, first_location = queue.get()
+
+        print('got first location')
         old_magnitude = 100
         while True:
             if stop_flag.value == 1:
                 print('broke mover')
                 return
-
+            if queue.get is None:
+                print('queue is empty, breaking')
+                return
+            print('trying to use q inside while')
             player_coords, player_angle, shapeshift_req, location = queue.get()
+            print('got data from q', player_coords, player_angle, shapeshift_req)
             delta, magnitude = movement_calculations(player_coords, player_angle, checkpoint)
             print(magnitude)
 
