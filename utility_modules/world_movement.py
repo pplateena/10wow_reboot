@@ -14,6 +14,7 @@ import utility_modules.move_ctype as cici
 
 def movement_calculations(player_coords, player_angle, checkpoint_coords, angle_only = None):
 
+    global delta
     if angle_only:
         if abs(player_angle - angle_only) > 180:
             if angle_only > player_angle:
@@ -26,7 +27,7 @@ def movement_calculations(player_coords, player_angle, checkpoint_coords, angle_
             if angle_only > player_angle:
                 delta = angle_only - player_angle
 
-        if delta == None:
+        if delta is None:
             delta = 1
 
         return delta
