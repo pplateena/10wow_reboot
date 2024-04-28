@@ -14,22 +14,27 @@ import utility_modules.move_ctype as cici
 
 def movement_calculations(player_coords, player_angle, checkpoint_coords, angle_only = None):
 
-    global delta
+
     if angle_only:
         try:
+            delta = 0
+            print(player_angle, angle_only)
             if abs(player_angle - angle_only) > 180:
+                print('if')
                 if angle_only > player_angle:
                     delta = (angle_only - 360) - player_angle
                 if player_angle > angle_only:
                     delta = (360 - player_angle) + angle_only
             else:
+                print('else')
                 if player_angle > angle_only:
                     delta = angle_only - player_angle
                 if angle_only > player_angle:
                     delta = angle_only - player_angle
         except Exception as e:
-            delta = 1
-            print(f'exception, {e}')
+                delta = 1
+                print(f'exception, {e}')
+            
         return delta
 
     vector_checkpoint = (checkpoint_coords[0] - player_coords[0], -(checkpoint_coords[1] - player_coords[1]))
