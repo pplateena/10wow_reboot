@@ -131,6 +131,7 @@ def gather_data(queue = None, stop_flag = None,):
             print('breaking gatherer')
             if stop_flag is not None:
                 stop_flag.value = 1
+                print('breaking gatherer cuz fh')
             return None, None, None, location
         elif location == "Heartstone":
             print('we need to heart')
@@ -167,7 +168,7 @@ def gather_data(queue = None, stop_flag = None,):
 
             if stop_flag.value:
                 print('finished gatherer')
-                queue.put(None)
+                queue.put((None))
                 break
         else:
 
@@ -175,6 +176,9 @@ def gather_data(queue = None, stop_flag = None,):
 
         if sleep_time > 0:
             sleep(sleep_time)
+
+    queue.put(None)
+    stop_flag.value = 1
 def mover(queue,stop_flag,cp_list):
     print('started mover')
     if stop_flag.value == 1:
@@ -201,7 +205,7 @@ def mover(queue,stop_flag,cp_list):
                 req_angle = checkpoint[3]
         print('trying to get first location')
 
-        if queue.get is None:
+        if queue.get() is None or stop_flag.value == 1:
             print('queue is empty, breaking')
             return
         _, _,_, first_location = queue.get()
@@ -212,7 +216,7 @@ def mover(queue,stop_flag,cp_list):
             if stop_flag.value == 1:
                 print('broke mover')
                 return
-            if queue.get is None:
+            if queue.get() is None:
                 print('queue is empty, breaking')
                 return
             print('trying to use q inside while')

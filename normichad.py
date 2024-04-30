@@ -260,6 +260,10 @@ def freehold_farmer(to_run):
 
                     debug = 0
 
+                case _:
+                    print('actions too big', state_input)
+                    raise IndexError()
+
         n_checkpoints = 0
         distance_old = 0
         timeouter = 0
@@ -340,7 +344,9 @@ def freehold_farmer(to_run):
                         elif (MAP_B, MAP_G, MAP_R) == (123, 22, 66):
                             print('we not in map, extra M press')
                             cici.press_key('m')
-                        print(MAP_B, MAP_G, MAP_R)
+                        else:
+                            print('found myself here again, perhaps break me', MAP_B, MAP_G, MAP_R)
+
 
                     results_LOCATION = model_LOCATION.predict(MAP)
                     boxes = results_LOCATION[0].boxes
