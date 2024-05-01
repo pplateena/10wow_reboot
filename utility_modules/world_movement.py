@@ -168,7 +168,7 @@ def gather_data(queue = None, stop_flag = None,):
 
             if stop_flag.value:
                 print('finished gatherer')
-                queue.put((None))
+                queue.put(None)
                 break
         else:
 
@@ -209,8 +209,8 @@ def mover(queue,stop_flag,cp_list):
             print('queue is empty, breaking')
             return
         _, _,_, first_location = queue.get()
-        if first_location is None or "Freehold":
-            return print('bruku fh or none', first_location)
+        if first_location == "Freehold":
+            return print('bruku fh', first_location)
 
 
         print('got first location')
@@ -225,6 +225,8 @@ def mover(queue,stop_flag,cp_list):
             print('trying to use q inside while')
             player_coords, player_angle, shapeshift_req, location = queue.get()
             print('got data from q', player_coords, player_angle, shapeshift_req)
+            if location == "Freehold":
+                return print('bruku fh', location)
             delta, magnitude = movement_calculations(player_coords, player_angle, checkpoint)
             print(magnitude)
 
@@ -333,7 +335,7 @@ def mp_moving(checkpoints_list):
     mover_process.start()
 
     gather_process.join()
-
+    mover_process.join()
 
     print('joint')
     while not stop_flag.value == 1:
