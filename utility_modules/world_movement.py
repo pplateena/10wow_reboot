@@ -177,7 +177,7 @@ def gather_data(queue = None, stop_flag = None,):
         if sleep_time > 0:
             sleep(sleep_time)
 
-    queue.put(None)
+    queue.put(None, None, None, None)
     stop_flag.value = 1
 def mover(queue,stop_flag,cp_list):
     print('started mover')
@@ -209,6 +209,9 @@ def mover(queue,stop_flag,cp_list):
             print('queue is empty, breaking')
             return
         _, _,_, first_location = queue.get()
+        if first_location is None or "Freehold":
+            return print('bruku fh or none', first_location)
+
 
         print('got first location')
         old_magnitude = 100
@@ -330,7 +333,7 @@ def mp_moving(checkpoints_list):
     mover_process.start()
 
     gather_process.join()
-    mover_process.join()
+
 
     print('joint')
     while not stop_flag.value == 1:
