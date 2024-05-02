@@ -278,9 +278,6 @@ def mover(queue,stop_flag,cp_list):
                 cv2.imshow(window_name, img)
                 cv2.waitKey(1)
 
-        if location:
-
-
 
         ##req angle
         while req_angle != None:
