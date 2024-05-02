@@ -127,13 +127,8 @@ def gather_data(queue = None, stop_flag = None,):
 
         zone_id = int(str(location_list[2]) + str(location_list[1]))  ##bgr
         location = get_locationd_fromID(zone_id)
-        if location == "Freehold":
-            print('breaking gatherer')
-            if stop_flag is not None:
-                stop_flag.value = 1
-                print('breaking gatherer cuz fh')
-            return None, None, None, location
-        elif location == "Heartstone":
+
+        if location == "Heartstone":
             print('we need to heart')
             if stop_flag is not None:
                 stop_flag.value = 1
@@ -166,35 +161,25 @@ def gather_data(queue = None, stop_flag = None,):
         if queue is not None:
             queue.put((player_coords, player_angle, shapeshift_req, location))
 
-            if stop_flag.value:
+            if stop_flag.value == 1:
                 print('finished gatherer')
-                queue.put(None)
+                queue.put((None))
                 break
         else:
-
             return player_coords, player_angle, shapeshift_req, location
 
         if sleep_time > 0:
             sleep(sleep_time)
 
-    queue.put(None, None, None, None)
-    stop_flag.value = 1
 def mover(queue,stop_flag,cp_list):
     print('started mover')
-    if stop_flag.value == 1:
-        print('broke mover')
-        return
     for checkpoint in cp_list:
-        if stop_flag.value == 1:
-            print('broke mover')
-            return
         for_starter = time()
         match len(checkpoint):
             case 2:
-                print('case 2 default')
+                print(f'case 2 default for {checkpoint}')
                 req_dist = 0.3
                 req_angle = None
-
             case 3:
                 print(f'case 3 for {checkpoint}')
                 req_dist = checkpoint[2]
@@ -203,45 +188,50 @@ def mover(queue,stop_flag,cp_list):
                 print(f'case 4 for {checkpoint}')
                 req_dist = checkpoint[2]
                 req_angle = checkpoint[3]
-        print('trying to get first location')
-
-        if queue.get() is None or stop_flag.value == 1:
-            print('queue is empty, breaking')
-            return
-        _, _,_, first_location = queue.get()
-        if first_location == "Freehold":
-            return print('bruku fh', first_location)
-
 
         print('got first location')
         old_magnitude = 100
+        first_location = True
         while True:
-            if stop_flag.value == 1:
-                print('broke mover')
-                return
-            if queue.get() is None:
-                print('queue is empty, breaking')
-                return
             print('trying to use q inside while')
             player_coords, player_angle, shapeshift_req, location = queue.get()
             print('got data from q', player_coords, player_angle, shapeshift_req)
-            if location == "Freehold":
-                return print('bruku fh', location)
+
+            if first_location == True:
+                first_location = location
+                print('saved first location', first_location)
+
+            if first_location != location:
+                print('left location', first_location, 'entered', location)
+                cici.keybd_up('w')
+                cici.keybd_up('d')
+                cici.keybd_up('a')
+                break
+            elif location == "Freehold":
+                print('entered freehold')
+                cici.keybd_up('d')
+                cici.keybd_up('a')
+                cici.keybd_up('w')
+                stop_flag.value = 1
+                return print('finished mover completely, print via return')
+
+
+
+
+            if shapeshift_req == 50:
+                cici.press_key('7')
+            elif shapeshift_req == 100:
+                cici.press_key('t')
+
             delta, magnitude = movement_calculations(player_coords, player_angle, checkpoint)
-            print(magnitude)
+            print(f'magnitude: {magnitude}, delta: {delta}')
 
             difference_magnitude = old_magnitude - magnitude
             if difference_magnitude < 0.01 and difference_magnitude > 0:
                 print('happened random')
                 cici.press_key(random.choice(['d', 'a', 'space', 's']), 0.1)
 
-
             old_magnitude = magnitude
-
-            if shapeshift_req == 50:
-                cici.press_key('7')
-            elif shapeshift_req == 100:
-                cici.press_key('t')
 
             if abs(delta) > 10:
                 if delta > 0:
@@ -252,26 +242,23 @@ def mover(queue,stop_flag,cp_list):
                 cici.keybd_up('d')
                 cici.keybd_up('a')
 
-
-
             if magnitude > req_dist and abs(delta) < 40:
-
                 cici.keybd_down('w')
 
             elif magnitude < req_dist:
                 cici.keybd_up('w')
                 cici.keybd_up('d')
                 cici.keybd_up('a')
+                print(f'reached cp {checkpoint}')
                 break
 
             if random.random() > 0.999:
                 cici.press_key('space')
 
-            if first_location != location:
-                print('left location', first_location)
-                cici.keybd_up('w')
-                cici.keybd_up('d')
-                cici.keybd_up('a')
+
+            cp_tooktime = time() - for_starter
+            if cp_tooktime > 120:
+                print('we fucked up in time spent')
                 break
 
             #visualisation
@@ -291,10 +278,8 @@ def mover(queue,stop_flag,cp_list):
                 cv2.imshow(window_name, img)
                 cv2.waitKey(1)
 
-            cp_tooktime = time() - for_starter
-            if cp_tooktime > 120:
-                print('we fucked up in time spent')
-                break
+        if location:
+
 
 
         ##req angle
@@ -324,7 +309,7 @@ def mover(queue,stop_flag,cp_list):
     cici.keybd_up('a')
     cici.keybd_up('w')
     stop_flag.value = 1
-
+    print('finished mover completely')
 def mp_moving(checkpoints_list):
     queue = mp.Queue()
     stop_flag = mp.Value('i', 0)
