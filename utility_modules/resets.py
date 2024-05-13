@@ -8,7 +8,7 @@ def grp_creation():
     cici.press_key('i')
     sleep(0.5)
 
-    cici.move_cursor_steps(180,440) ## premade grps
+    cici.move_cursor_steps(140,390) ## premade grps
     sleep(uniform(0.3,1))
 
     cici.press_left_button()
