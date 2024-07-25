@@ -160,13 +160,18 @@ def loginer():
         sleep(1)
 
 
+        cici.press_left_button()
+        sleep(0.5)
+        cici.release_left_button()
+        sleep(1)
+        
         print('started game')
 
-        cici.type_string(login)
-
-        uniform(0.4,2)
-        cici.press_key('tab')
-        uniform(0.2,1)
+        # cici.type_string(login)
+        #
+        # uniform(0.4,2)
+        # cici.press_key('tab')
+        # uniform(0.2,1)
 
         cici.type_string(password)
 
