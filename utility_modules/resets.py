@@ -189,7 +189,7 @@ def logout():
     cici.press_key('esc')
     sleep(1.5)
 
-    cici.move_cursor_steps(940,646)
+    cici.move_cursor_steps(940,705)
     
     sleep(0.5)
 
